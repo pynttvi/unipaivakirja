@@ -1,5 +1,5 @@
 import {Time} from "@/types/Time";
-import SleepQuality from "@/types/SleepQuality";
+import ZeroToTen from "@/types/ZeroToTen";
 
 export default interface NightSleep {
     date: string
@@ -11,7 +11,8 @@ export default interface NightSleep {
     wasAwakeInTheNight: number //minutes
     slept: Time
     timeInBed: Time
-    sleepQuality: SleepQuality // 1-10
+    sleepQuality: ZeroToTen // 1-10
+    daytimeVitality: ZeroToTen // 1-10
     napTime: number //minutes
     coffeeCups: number //count
     alcoholDoses: number //count

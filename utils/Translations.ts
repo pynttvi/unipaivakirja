@@ -10,6 +10,7 @@ export type SleepField =
     | 'slept'
     | 'timeInBed'
     | 'sleepQuality'
+    | 'daytimeVitality'
     | 'napTime'
     | 'coffeeCups'
     | 'alcoholDoses'
@@ -34,6 +35,7 @@ export const headers: SleepField[] = [
     'slept',
     'timeInBed',
     'sleepQuality',
+    'daytimeVitality',
     'napTime',
     'coffeeCups',
     'alcoholDoses',
@@ -66,6 +68,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
         slept: 'Slept',
         timeInBed: 'In Bed',
         sleepQuality: 'Quality',
+        daytimeVitality: 'Daytime vitality',
         napTime: 'Nap',
         coffeeCups: 'Coffee',
         alcoholDoses: 'Alcohol',
@@ -102,6 +105,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
         fromDate: 'Alku',
         toDate: 'Loppu',
         sleepEfficiency: 'Unitehokkuus',
+        daytimeVitality: 'Vireys',
         excellent: 'Erinomainen',
         good: 'Hyvä',
         fair: 'Kehno',

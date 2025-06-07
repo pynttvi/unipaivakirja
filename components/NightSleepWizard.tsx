@@ -8,7 +8,7 @@ import {TimeInput} from '@/components/TimeInput';
 import * as FileSystem from 'expo-file-system';
 
 import {lang, translations} from "@/utils/Translations";
-import SleepQuality from "@/types/SleepQuality";
+import ZeroToTen from "@/types/ZeroToTen";
 import {SleepQualitySelect} from "@/components/SleepQualitySelect";
 import {dateToString, stringToDate} from "@/utils/DateUtils";
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +25,7 @@ const steps: (keyof typeof translations.en)[] = [
     'slept',
     'timeInBed',
     'sleepQuality',
+    'daytimeVitality',
     'napTime',
     'coffeeCups',
     'alcoholDoses',
@@ -81,7 +82,8 @@ export function NightSleepWizard() {
         wasAwakeInTheNight: 0,
         slept: {hour: 7, minute: 0},
         timeInBed: {hour: 6, minute: 0},
-        sleepQuality: new SleepQuality(7),
+        sleepQuality: new ZeroToTen(5),
+        daytimeVitality: new ZeroToTen(5),
         napTime: 0,
         coffeeCups: 1,
         alcoholDoses: 0,
@@ -101,7 +103,11 @@ export function NightSleepWizard() {
 
     const updateField = (field: keyof NightSleep, value: any) => {
         if (field === "sleepQuality") {
-            setData({...data, [field]: new SleepQuality(value)});
+            setData({...data, [field]: new ZeroToTen(value)});
+            return
+        }
+        if (field === "daytimeVitality") {
+            setData({...data, [field]: new ZeroToTen(value)});
             return
         }
         setData({...data, [field]: value});
@@ -146,12 +152,24 @@ export function NightSleepWizard() {
             }
             case 'wentToBed':
             case 'wokeUp':
-            case 'gotOutOfBed':
                 return (
                     <TimeInput
                         value={data[currentKey]}
                         onChange={(val) => updateField(currentKey, val)}
                     />)
+            case 'gotOutOfBed': {
+                // Suggest wokeUp time if gotOutOfBed is still at default 07:00
+                if (data.gotOutOfBed.hour === 7 && data.gotOutOfBed.minute === 0) {
+                    updateField('gotOutOfBed', data.wokeUp);
+                }
+
+                return (
+                    <TimeInput
+                        value={data.gotOutOfBed}
+                        onChange={(val) => updateField('gotOutOfBed', val)}
+                    />
+                );
+            }
             case 'timeInBed': {
                 if (data.timeInBed.hour === 9 && data.timeInBed.minute === 0) {
                     const suggested = getSuggestedTimeInBed(data);
@@ -171,6 +189,14 @@ export function NightSleepWizard() {
                         value={data.sleepQuality.value}
                         onChange={(val) => updateField('sleepQuality', val)}
                         label={translations[lang].sleepQuality}
+                    />
+                );
+            case 'daytimeVitality':
+                return (
+                    <SleepQualitySelect
+                        value={data.daytimeVitality.value}
+                        onChange={(val) => updateField('daytimeVitality', val)}
+                        label={translations[lang].daytimeVitality}
                     />
                 );
             case 'delayToFallAsleep':
@@ -241,7 +267,8 @@ export function NightSleepWizard() {
                 wasAwakeInTheNight: 0,
                 slept: {hour: 7, minute: 0},
                 timeInBed: {hour: 9, minute: 0},
-                sleepQuality: new SleepQuality(7),
+                sleepQuality: new ZeroToTen(5),
+                daytimeVitality: new ZeroToTen(5),
                 napTime: 0,
                 coffeeCups: 0,
                 alcoholDoses: 0,
